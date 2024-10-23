@@ -1,0 +1,19 @@
+form {
+  display: flex;
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.create-btn {
+  margin-right: 10px;
+
+  span {
+    background: #b9b9b9;
+    padding: 3px 5px;
+    color: black;
+    border-radius: 3px;
+  }
+}

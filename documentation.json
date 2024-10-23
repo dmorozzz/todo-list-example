@@ -1,0 +1,1579 @@
+{
+    "pipes": [],
+    "interfaces": [
+        {
+            "name": "ChangeStatusPayload",
+            "id": "interface-ChangeStatusPayload-2dd39ab3e9418a202b81e1f68b26a4debcd80eb2cf98048d9b458ea3df7ab7915b0c8a68c778f965f1a13021b92d9f0f1e24e454812011407e7ed23b8698135a",
+            "file": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {\n  ChangeDetectionStrategy,\n  Component,\n  EventEmitter,\n  Input,\n  Output,\n} from '@angular/core';\nimport { MatListModule } from '@angular/material/list';\nimport { MatButtonModule } from '@angular/material/button';\n\nexport interface TodosListItem {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\ninterface ChangeStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Component({\n  selector: 'app-todos-list',\n  standalone: true,\n  imports: [MatListModule, MatButtonModule],\n  templateUrl: './todos-list.component.html',\n  styleUrl: './todos-list.component.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class TodosListComponent {\n  @Input({ required: true }) public todos!: TodosListItem[];\n  @Output() public statusChange = new EventEmitter<ChangeStatusPayload>();\n  @Output() public deleted = new EventEmitter<number>();\n\n  public changeStatus(payload: ChangeStatusPayload): void {\n    const todoItem = this.todos.find((todo) => todo.id === payload.id);\n\n    if (todoItem?.completed === payload.completed) {\n      return;\n    }\n\n    this.statusChange.emit(payload);\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "completed",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 19
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 18
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "ChangeTodoStatusPayload",
+            "id": "interface-ChangeTodoStatusPayload-a4381b7893abc4fd153d8e078c53d84b57fd65989f759e74702a32c44508ebac95dd688dea26f6805a8dbe30be499c7e22f36a4af15e83ff5c2c30d63ae26cee",
+            "file": "src/app/shared/services/api.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { map, Observable } from 'rxjs';\n\nexport interface Todo {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\nexport interface CreateTodoPayload {\n  title: string;\n}\n\nexport interface ChangeTodoStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Injectable({ providedIn: 'root' })\nexport class ApiService {\n  private http = inject(HttpClient);\n  private readonly url = 'https://jsonplaceholder.typicode.com/todos';\n\n  public getTodos(): Observable<Todo[]> {\n    return this.http\n      .get<Todo[]>(this.url)\n      .pipe(map((todos) => todos.slice(0, 9)));\n  }\n\n  public createTodo(payload: CreateTodoPayload): Observable<Todo> {\n    return this.http.post<Todo>(this.url, { ...payload, completed: false });\n  }\n\n  public changeTodoStatus(payload: ChangeTodoStatusPayload): Observable<Todo> {\n    return this.http.patch<Todo>(`${this.url}/${payload.id}`, {\n      completed: payload.completed,\n    });\n  }\n\n  public deleteTodo(todoId: number): Observable<void> {\n    return this.http.delete<void>(`${this.url}/${todoId}`);\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "completed",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 17
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "CreateTodoPayload",
+            "id": "interface-CreateTodoPayload-a4381b7893abc4fd153d8e078c53d84b57fd65989f759e74702a32c44508ebac95dd688dea26f6805a8dbe30be499c7e22f36a4af15e83ff5c2c30d63ae26cee",
+            "file": "src/app/shared/services/api.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { map, Observable } from 'rxjs';\n\nexport interface Todo {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\nexport interface CreateTodoPayload {\n  title: string;\n}\n\nexport interface ChangeTodoStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Injectable({ providedIn: 'root' })\nexport class ApiService {\n  private http = inject(HttpClient);\n  private readonly url = 'https://jsonplaceholder.typicode.com/todos';\n\n  public getTodos(): Observable<Todo[]> {\n    return this.http\n      .get<Todo[]>(this.url)\n      .pipe(map((todos) => todos.slice(0, 9)));\n  }\n\n  public createTodo(payload: CreateTodoPayload): Observable<Todo> {\n    return this.http.post<Todo>(this.url, { ...payload, completed: false });\n  }\n\n  public changeTodoStatus(payload: ChangeTodoStatusPayload): Observable<Todo> {\n    return this.http.patch<Todo>(`${this.url}/${payload.id}`, {\n      completed: payload.completed,\n    });\n  }\n\n  public deleteTodo(todoId: number): Observable<void> {\n    return this.http.delete<void>(`${this.url}/${todoId}`);\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "title",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "Todo",
+            "id": "interface-Todo-a4381b7893abc4fd153d8e078c53d84b57fd65989f759e74702a32c44508ebac95dd688dea26f6805a8dbe30be499c7e22f36a4af15e83ff5c2c30d63ae26cee",
+            "file": "src/app/shared/services/api.service.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { map, Observable } from 'rxjs';\n\nexport interface Todo {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\nexport interface CreateTodoPayload {\n  title: string;\n}\n\nexport interface ChangeTodoStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Injectable({ providedIn: 'root' })\nexport class ApiService {\n  private http = inject(HttpClient);\n  private readonly url = 'https://jsonplaceholder.typicode.com/todos';\n\n  public getTodos(): Observable<Todo[]> {\n    return this.http\n      .get<Todo[]>(this.url)\n      .pipe(map((todos) => todos.slice(0, 9)));\n  }\n\n  public createTodo(payload: CreateTodoPayload): Observable<Todo> {\n    return this.http.post<Todo>(this.url, { ...payload, completed: false });\n  }\n\n  public changeTodoStatus(payload: ChangeTodoStatusPayload): Observable<Todo> {\n    return this.http.patch<Todo>(`${this.url}/${payload.id}`, {\n      completed: payload.completed,\n    });\n  }\n\n  public deleteTodo(todoId: number): Observable<void> {\n    return this.http.delete<void>(`${this.url}/${todoId}`);\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "completed",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 8
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                },
+                {
+                    "name": "title",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "TodosListItem",
+            "id": "interface-TodosListItem-2dd39ab3e9418a202b81e1f68b26a4debcd80eb2cf98048d9b458ea3df7ab7915b0c8a68c778f965f1a13021b92d9f0f1e24e454812011407e7ed23b8698135a",
+            "file": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import {\n  ChangeDetectionStrategy,\n  Component,\n  EventEmitter,\n  Input,\n  Output,\n} from '@angular/core';\nimport { MatListModule } from '@angular/material/list';\nimport { MatButtonModule } from '@angular/material/button';\n\nexport interface TodosListItem {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\ninterface ChangeStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Component({\n  selector: 'app-todos-list',\n  standalone: true,\n  imports: [MatListModule, MatButtonModule],\n  templateUrl: './todos-list.component.html',\n  styleUrl: './todos-list.component.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class TodosListComponent {\n  @Input({ required: true }) public todos!: TodosListItem[];\n  @Output() public statusChange = new EventEmitter<ChangeStatusPayload>();\n  @Output() public deleted = new EventEmitter<number>();\n\n  public changeStatus(payload: ChangeStatusPayload): void {\n    const todoItem = this.todos.find((todo) => todo.id === payload.id);\n\n    if (todoItem?.completed === payload.completed) {\n      return;\n    }\n\n    this.statusChange.emit(payload);\n  }\n}\n",
+            "properties": [
+                {
+                    "name": "completed",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "boolean",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 14
+                },
+                {
+                    "name": "id",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "number",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                },
+                {
+                    "name": "title",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        },
+        {
+            "name": "TodosState",
+            "id": "interface-TodosState-49c17fabf58278946081862f4f0225fff2278516593a0ad0bf4497da90342418bdc3281082f79f3d205aff6d44b3191a33021b4798c8dd58811b95b43e505b8f",
+            "file": "src/app/features/todos/store/todos.reducer.ts",
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "interface",
+            "sourceCode": "import { createReducer, on } from '@ngrx/store';\nimport { Todo } from '@shared/services/api.service';\nimport { todosApiActions } from './todos.actions';\n\nexport interface TodosState {\n  todos: Todo[];\n  error: string | null;\n}\n\nexport const initialTodosState: TodosState = {\n  todos: [],\n  error: null,\n};\n\nexport const todosReducer = createReducer(\n  initialTodosState,\n  on(todosApiActions.loadSuccess, (_, { todos }) => {\n    return { todos, error: null };\n  }),\n  on(todosApiActions.loadFaile, (_, { error }) => {\n    return { todos: [], error };\n  }),\n  on(todosApiActions.createSuccess, (state, { todo }) => {\n    return { ...state, todos: [...state.todos, todo] };\n  }),\n  on(todosApiActions.changeStatusSuccess, (state, { todo }) => {\n    return {\n      ...state,\n      todos: state.todos.map((oldTodo) => {\n        if (oldTodo.id !== todo.id) {\n          return oldTodo;\n        }\n\n        return todo;\n      }),\n    };\n  }),\n  on(todosApiActions.deleteSuccess, (state, { todoId }) => {\n    return {\n      ...state,\n      todos: state.todos.filter((todo) => todo.id !== todoId),\n    };\n  }),\n);\n",
+            "properties": [
+                {
+                    "name": "error",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string | null",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 7
+                },
+                {
+                    "name": "todos",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Todo[]",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 6
+                }
+            ],
+            "indexSignatures": [],
+            "kind": 171,
+            "methods": [],
+            "extends": []
+        }
+    ],
+    "injectables": [
+        {
+            "name": "ApiService",
+            "id": "injectable-ApiService-a4381b7893abc4fd153d8e078c53d84b57fd65989f759e74702a32c44508ebac95dd688dea26f6805a8dbe30be499c7e22f36a4af15e83ff5c2c30d63ae26cee",
+            "file": "src/app/shared/services/api.service.ts",
+            "properties": [
+                {
+                    "name": "http",
+                    "defaultValue": "inject(HttpClient)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 22,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "url",
+                    "defaultValue": "'https://jsonplaceholder.typicode.com/todos'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "string",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 23,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "changeTodoStatus",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeTodoStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<Todo>",
+                    "typeParameters": [],
+                    "line": 35,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeTodoStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "createTodo",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<Todo>",
+                    "typeParameters": [],
+                    "line": 31,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "deleteTodo",
+                    "args": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "Observable<void>",
+                    "typeParameters": [],
+                    "line": 41,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "getTodos",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "Observable<Todo[]>",
+                    "typeParameters": [],
+                    "line": 25,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { HttpClient } from '@angular/common/http';\nimport { inject, Injectable } from '@angular/core';\nimport { map, Observable } from 'rxjs';\n\nexport interface Todo {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\nexport interface CreateTodoPayload {\n  title: string;\n}\n\nexport interface ChangeTodoStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Injectable({ providedIn: 'root' })\nexport class ApiService {\n  private http = inject(HttpClient);\n  private readonly url = 'https://jsonplaceholder.typicode.com/todos';\n\n  public getTodos(): Observable<Todo[]> {\n    return this.http\n      .get<Todo[]>(this.url)\n      .pipe(map((todos) => todos.slice(0, 9)));\n  }\n\n  public createTodo(payload: CreateTodoPayload): Observable<Todo> {\n    return this.http.post<Todo>(this.url, { ...payload, completed: false });\n  }\n\n  public changeTodoStatus(payload: ChangeTodoStatusPayload): Observable<Todo> {\n    return this.http.patch<Todo>(`${this.url}/${payload.id}`, {\n      completed: payload.completed,\n    });\n  }\n\n  public deleteTodo(todoId: number): Observable<void> {\n    return this.http.delete<void>(`${this.url}/${todoId}`);\n  }\n}\n",
+            "extends": [],
+            "type": "injectable"
+        },
+        {
+            "name": "TodosEffects",
+            "id": "injectable-TodosEffects-7bd82997d8102f2b2ba75790cdb0c346cc02232ccd57dfc82b5ce1548df051bd8dbac8ade6262a594faec1f6d04a051748be6d89cbec882d215bbf2b738ef6d6",
+            "file": "src/app/features/todos/store/todos.effects.ts",
+            "properties": [
+                {
+                    "name": "actions$",
+                    "defaultValue": "inject(Actions)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 9,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "api",
+                    "defaultValue": "inject(ApiService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 10,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "changeStatus$",
+                    "defaultValue": "createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.changeStatus),\n      exhaustMap((payload) =>\n        this.api\n          .changeTodoStatus(payload)\n          .pipe(map((todo) => todosApiActions.changeStatusSuccess({ todo }))),\n      ),\n    ),\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 48
+                },
+                {
+                    "name": "create$",
+                    "defaultValue": "createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.create),\n      exhaustMap((payload) => {\n        return this.api\n          .createTodo(payload)\n          .pipe(map((todo) => todosApiActions.createSuccess({ todo })));\n      }),\n    ),\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 26
+                },
+                {
+                    "name": "delete$",
+                    "defaultValue": "createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.delete),\n      exhaustMap(({ todoId }) =>\n        this.api\n          .deleteTodo(todoId)\n          .pipe(map(() => todosApiActions.deleteSuccess({ todoId }))),\n      ),\n    ),\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 37
+                },
+                {
+                    "name": "load$",
+                    "defaultValue": "createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.load),\n      exhaustMap(() =>\n        this.api.getTodos().pipe(\n          map((todos) => todosApiActions.loadSuccess({ todos })),\n          catchError(() =>\n            of(todosApiActions.loadFaile({ error: 'Something went wrong' })),\n          ),\n        ),\n      ),\n    ),\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 12
+                }
+            ],
+            "methods": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { inject, Injectable } from '@angular/core';\nimport { Actions, createEffect, ofType } from '@ngrx/effects';\nimport { ApiService } from '@shared/services/api.service';\nimport { todosActions, todosApiActions } from './todos.actions';\nimport { catchError, exhaustMap, map, of } from 'rxjs';\n\n@Injectable({ providedIn: 'root' })\nexport class TodosEffects {\n  private actions$ = inject(Actions);\n  private api = inject(ApiService);\n\n  load$ = createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.load),\n      exhaustMap(() =>\n        this.api.getTodos().pipe(\n          map((todos) => todosApiActions.loadSuccess({ todos })),\n          catchError(() =>\n            of(todosApiActions.loadFaile({ error: 'Something went wrong' })),\n          ),\n        ),\n      ),\n    ),\n  );\n\n  create$ = createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.create),\n      exhaustMap((payload) => {\n        return this.api\n          .createTodo(payload)\n          .pipe(map((todo) => todosApiActions.createSuccess({ todo })));\n      }),\n    ),\n  );\n\n  delete$ = createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.delete),\n      exhaustMap(({ todoId }) =>\n        this.api\n          .deleteTodo(todoId)\n          .pipe(map(() => todosApiActions.deleteSuccess({ todoId }))),\n      ),\n    ),\n  );\n\n  changeStatus$ = createEffect(() =>\n    this.actions$.pipe(\n      ofType(todosActions.changeStatus),\n      exhaustMap((payload) =>\n        this.api\n          .changeTodoStatus(payload)\n          .pipe(map((todo) => todosApiActions.changeStatusSuccess({ todo }))),\n      ),\n    ),\n  );\n}\n",
+            "extends": [],
+            "type": "injectable"
+        },
+        {
+            "name": "TodosService",
+            "id": "injectable-TodosService-cc6f50f957cb9875481b905d14426ae55835cf51b6f36f9a8a8eb8f7d57e55704657a1429a6787291b576510fc21be9fc8454a63a5a62eb73da83419ea57297f",
+            "file": "src/app/features/todos/todos.service.ts",
+            "properties": [
+                {
+                    "name": "error$",
+                    "defaultValue": "this.store.select(selectTodosStateError)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 16,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "store",
+                    "defaultValue": "inject(Store)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 13,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "todos$",
+                    "defaultValue": "this.store.select(selectAllTodos)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 15,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methods": [
+                {
+                    "name": "changeTodoStatus",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeTodoStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 22,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeTodoStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "createTodo",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 26,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "deleteTodo",
+                    "args": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 30,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "loadTodos",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 18,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "description": "",
+            "rawdescription": "\n",
+            "sourceCode": "import { inject, Injectable } from '@angular/core';\nimport { Store } from '@ngrx/store';\nimport { selectAllTodos, selectTodosStateError, todosActions } from './store';\nimport {\n  ChangeTodoStatusPayload,\n  CreateTodoPayload,\n} from '@shared/services/api.service';\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class TodosService {\n  private store = inject(Store);\n\n  public todos$ = this.store.select(selectAllTodos);\n  public error$ = this.store.select(selectTodosStateError);\n\n  public loadTodos(): void {\n    this.store.dispatch(todosActions.load());\n  }\n\n  public changeTodoStatus(payload: ChangeTodoStatusPayload): void {\n    this.store.dispatch(todosActions.changeStatus(payload));\n  }\n\n  public createTodo(payload: CreateTodoPayload): void {\n    this.store.dispatch(todosActions.create(payload));\n  }\n\n  public deleteTodo(todoId: number): void {\n    this.store.dispatch(todosActions.delete({ todoId }));\n  }\n}\n",
+            "extends": [],
+            "type": "injectable"
+        }
+    ],
+    "guards": [],
+    "interceptors": [],
+    "classes": [],
+    "directives": [],
+    "components": [
+        {
+            "name": "AppComponent",
+            "id": "component-AppComponent-34f0c027314d6fdc1c5b768434cc11ae1f3f7e086bcb5950e6183b08f7d5dc86d02d1d2f20e43806b8904d9fbb45aeefd0e93a041a2df0c6d272b5ff26eefb0a",
+            "file": "src/app/app.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-root",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./app.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "RouterOutlet"
+                },
+                {
+                    "name": "TodosSearchComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { RouterOutlet } from '@angular/router';\nimport { TodosSearchComponent } from './shared/components/todos/todos-search/todos-search.component';\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [RouterOutlet, TodosSearchComponent],\n  templateUrl: './app.component.html',\n  styleUrl: './app.component.scss',\n})\nexport class AppComponent {}\n",
+            "styleUrl": "./app.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<router-outlet />\n"
+        },
+        {
+            "name": "TodosComponent",
+            "id": "component-TodosComponent-14b51a4ebf17479dc3a6eb08a4583c60a2ca592c6193c1c1a4b715e163afb3990f7815a70caea196ba772d440f515a5ad9477e8ad46399d63ddaf67ddd3c0e1f",
+            "file": "src/app/features/todos/todos.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-todos",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./todos.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [
+                {
+                    "name": "error$",
+                    "defaultValue": "this.todosService.error$",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 28,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "search$",
+                    "defaultValue": "new BehaviorSubject<string>('')",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 29,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "todos$",
+                    "defaultValue": "this.todosService.todos$",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "todosSearch$",
+                    "defaultValue": "combineLatest([\n    this.todos$,\n    this.search$.pipe(debounceTime(500)),\n  ]).pipe(\n    map(([todos, search]) => {\n      if (!search) {\n        return todos;\n      }\n      return todos.filter((todo) =>\n        todo.title.toLowerCase().includes(search.toLowerCase()),\n      );\n    }),\n  )",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 30,
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "todosService",
+                    "defaultValue": "inject(TodosService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 21,
+                    "modifierKind": [
+                        123
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "changeTodoStatus",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "literal type",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 44,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "literal type",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "createTodo",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 48,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "CreateTodoPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "deleteTodo",
+                    "args": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 52,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "todoId",
+                            "type": "number",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "TodosSearchComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "TodosListComponent",
+                    "type": "component"
+                },
+                {
+                    "name": "AsyncPipe",
+                    "type": "pipe"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { ChangeDetectionStrategy, Component, inject } from '@angular/core';\nimport { TodosService } from './todos.service';\nimport { TodosSearchComponent } from '@shared/components/todos/todos-search/todos-search.component';\nimport {\n  TodosListItem,\n  TodosListComponent,\n} from '@shared/components/todos/todos-list/todos-list.component';\nimport { AsyncPipe } from '@angular/common';\nimport { BehaviorSubject, combineLatest, debounceTime, map } from 'rxjs';\nimport { CreateTodoPayload } from '@shared/services/api.service';\n\n@Component({\n  selector: 'app-todos',\n  standalone: true,\n  imports: [TodosSearchComponent, TodosListComponent, AsyncPipe],\n  templateUrl: './todos.component.html',\n  styleUrl: './todos.component.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class TodosComponent {\n  private todosService = inject(TodosService);\n\n  constructor() {\n    this.todosService.loadTodos();\n  }\n\n  public todos$ = this.todosService.todos$;\n  public error$ = this.todosService.error$;\n  public search$ = new BehaviorSubject<string>('');\n  public todosSearch$ = combineLatest([\n    this.todos$,\n    this.search$.pipe(debounceTime(500)),\n  ]).pipe(\n    map(([todos, search]) => {\n      if (!search) {\n        return todos;\n      }\n      return todos.filter((todo) =>\n        todo.title.toLowerCase().includes(search.toLowerCase()),\n      );\n    }),\n  );\n\n  public changeTodoStatus(payload: { id: number; completed: boolean }): void {\n    this.todosService.changeTodoStatus(payload);\n  }\n\n  public createTodo(payload: CreateTodoPayload): void {\n    this.todosService.createTodo(payload);\n  }\n\n  public deleteTodo(todoId: number): void {\n    this.todosService.deleteTodo(todoId);\n  }\n}\n",
+            "styleUrl": "./todos.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "constructorObj": {
+                "name": "constructor",
+                "description": "",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "args": [],
+                "line": 21
+            },
+            "extends": [],
+            "templateData": "<section class=\"todos\">\n  <app-todos-search (changed)=\"search$.next($event)\" (created)=\"createTodo({ title: $event })\"></app-todos-search>\n  @if (todosSearch$ | async; as todos) {\n  @if (search$ | async) {\n  <span>Search result: {{ todos.length === 0 ? \"nothing\" : \"\" }}</span>\n  }\n  <app-todos-list [todos]=\"todos\" (statusChange)=\"changeTodoStatus($event)\"\n    (deleted)=\"deleteTodo($event)\"></app-todos-list>\n  }\n</section>\n"
+        },
+        {
+            "name": "TodosListComponent",
+            "id": "component-TodosListComponent-2dd39ab3e9418a202b81e1f68b26a4debcd80eb2cf98048d9b458ea3df7ab7915b0c8a68c778f965f1a13021b92d9f0f1e24e454812011407e7ed23b8698135a",
+            "file": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-todos-list",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./todos-list.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "required": true,
+                    "name": "todos",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "optional": false,
+                    "line": 31,
+                    "type": "TodosListItem[]",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "deleted",
+                    "defaultValue": "new EventEmitter<number>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 33,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "statusChange",
+                    "defaultValue": "new EventEmitter<ChangeStatusPayload>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 32,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "changeStatus",
+                    "args": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 35,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "payload",
+                            "type": "ChangeStatusPayload",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "MatListModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatButtonModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {\n  ChangeDetectionStrategy,\n  Component,\n  EventEmitter,\n  Input,\n  Output,\n} from '@angular/core';\nimport { MatListModule } from '@angular/material/list';\nimport { MatButtonModule } from '@angular/material/button';\n\nexport interface TodosListItem {\n  id: number;\n  title: string;\n  completed: boolean;\n}\n\ninterface ChangeStatusPayload {\n  id: number;\n  completed: boolean;\n}\n\n@Component({\n  selector: 'app-todos-list',\n  standalone: true,\n  imports: [MatListModule, MatButtonModule],\n  templateUrl: './todos-list.component.html',\n  styleUrl: './todos-list.component.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class TodosListComponent {\n  @Input({ required: true }) public todos!: TodosListItem[];\n  @Output() public statusChange = new EventEmitter<ChangeStatusPayload>();\n  @Output() public deleted = new EventEmitter<number>();\n\n  public changeStatus(payload: ChangeStatusPayload): void {\n    const todoItem = this.todos.find((todo) => todo.id === payload.id);\n\n    if (todoItem?.completed === payload.completed) {\n      return;\n    }\n\n    this.statusChange.emit(payload);\n  }\n}\n",
+            "styleUrl": "./todos-list.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<mat-selection-list #shoes>\n  @for (todo of todos; track todo.id) {\n  <div class=\"todo-item\">\n    <mat-list-option [selected]=\"todo.completed\" (selectedChange)=\"changeStatus({ id: todo.id, completed: $event })\">\n      <div matListItemTitle>\n        {{ todo.title }}\n      </div>\n    </mat-list-option>\n    <button class=\"delete-btn\" mat-button (click)=\"deleted.next(todo.id)\">\n      Delete\n    </button>\n  </div>\n  }\n</mat-selection-list>\n"
+        },
+        {
+            "name": "TodosSearchComponent",
+            "id": "component-TodosSearchComponent-dcf1dc565479ff1fe4c636e7b43d912f8be8aeb14e606eedc417d192e6bbe122a66f136793120bb772b7a2a872ec8b7de5fff213cc2d8419b98fc13e1cf0c736",
+            "file": "src/app/shared/components/todos/todos-search/todos-search.component.ts",
+            "changeDetection": "ChangeDetectionStrategy.OnPush",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "app-todos-search",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./todos-search.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "default",
+                    "defaultValue": "''",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 40,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "changed",
+                    "defaultValue": "new EventEmitter<string>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 41,
+                    "type": "EventEmitter"
+                },
+                {
+                    "name": "created",
+                    "defaultValue": "new EventEmitter<string>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 42,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [
+                {
+                    "name": "destroy$",
+                    "defaultValue": "new Subject<void>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 38,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "fb",
+                    "defaultValue": "inject(FormBuilder)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 36,
+                    "modifierKind": [
+                        123
+                    ]
+                },
+                {
+                    "name": "todosSearchForm",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FormGroup",
+                    "indexKey": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 44,
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "create",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 64,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "ngOnDestroy",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 59,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                },
+                {
+                    "name": "ngOnInit",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 49,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "modifierKind": [
+                        125
+                    ]
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "MatFormFieldModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatInputModule",
+                    "type": "module"
+                },
+                {
+                    "name": "MatButtonModule",
+                    "type": "module"
+                },
+                {
+                    "name": "ReactiveFormsModule",
+                    "type": "module"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import {\n  ChangeDetectionStrategy,\n  Component,\n  EventEmitter,\n  inject,\n  Input,\n  OnDestroy,\n  OnInit,\n  Output,\n} from '@angular/core';\nimport {\n  FormBuilder,\n  FormControl,\n  FormGroup,\n  ReactiveFormsModule,\n} from '@angular/forms';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatFormFieldModule } from '@angular/material/form-field';\nimport { MatInputModule } from '@angular/material/input';\nimport { Subject, takeUntil } from 'rxjs';\n\n@Component({\n  selector: 'app-todos-search',\n  standalone: true,\n  imports: [\n    MatFormFieldModule,\n    MatInputModule,\n    MatButtonModule,\n    ReactiveFormsModule,\n  ],\n  templateUrl: './todos-search.component.html',\n  styleUrl: './todos-search.component.scss',\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class TodosSearchComponent implements OnInit, OnDestroy {\n  private fb = inject(FormBuilder);\n\n  private destroy$ = new Subject<void>();\n\n  @Input() public default: string = '';\n  @Output() public changed = new EventEmitter<string>();\n  @Output() public created = new EventEmitter<string>();\n\n  public todosSearchForm!: FormGroup;\n  public get title(): FormControl {\n    return this.todosSearchForm.get('title') as FormControl;\n  }\n\n  public ngOnInit(): void {\n    this.todosSearchForm = this.fb.group({\n      title: [this.default],\n    });\n\n    this.title.valueChanges\n      .pipe(takeUntil(this.destroy$))\n      .subscribe((value) => this.changed.emit(value));\n  }\n\n  public ngOnDestroy(): void {\n    this.destroy$.next();\n    this.destroy$.complete();\n  }\n\n  public create() {\n    const titleValue = this.title.value;\n\n    if (!titleValue) {\n      return;\n    }\n\n    this.title.setValue('');\n    this.created.next(titleValue);\n  }\n}\n",
+            "styleUrl": "./todos-search.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "implements": [
+                "OnInit",
+                "OnDestroy"
+            ],
+            "accessors": {
+                "title": {
+                    "name": "title",
+                    "getSignature": {
+                        "name": "title",
+                        "type": "",
+                        "returnType": "FormControl",
+                        "line": 45
+                    }
+                }
+            },
+            "templateData": "<form [formGroup]=\"todosSearchForm\">\n  <mat-form-field appearance=\"outline\">\n    <mat-label>Search or create todo</mat-label>\n    <input matInput placeholder=\"Write todo title\" formControlName=\"title\" (keyup.Enter)=\"create()\" />\n    <button class=\"create-btn\" mat-stroked-button matSuffix (click)=\"create()\">\n      Create\n      <span>↵ Enter</span>\n    </button>\n  </mat-form-field>\n</form>\n"
+        }
+    ],
+    "modules": [],
+    "miscellaneous": {
+        "variables": [
+            {
+                "name": "appConfig",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/app.config.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "ApplicationConfig",
+                "defaultValue": "{\n  providers: [\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideAnimationsAsync(),\n    provideStore({ todosState: todosReducer }),\n    provideEffects(TodosEffects),\n    provideHttpClient(),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n  ],\n}"
+            },
+            {
+                "name": "initialTodosState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "TodosState",
+                "defaultValue": "{\n  todos: [],\n  error: null,\n}"
+            },
+            {
+                "name": "selectAllTodos",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(\n  selectTodosState,\n  (state) => state.todos,\n)"
+            },
+            {
+                "name": "selectTodosState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createFeatureSelector<Readonly<TodosState>>('todosState')"
+            },
+            {
+                "name": "selectTodosStateError",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.selectors.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createSelector(\n  selectTodosState,\n  (state) => state.error,\n)"
+            },
+            {
+                "name": "todosActions",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createActionGroup({\n  source: 'Todos',\n  events: {\n    Load: emptyProps(),\n    Create: props<CreateTodoPayload>(),\n    ChangeStatus: props<ChangeTodoStatusPayload>(),\n    Delete: props<{ todoId: number }>(),\n  },\n})"
+            },
+            {
+                "name": "todosApiActions",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.actions.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createActionGroup({\n  source: 'Todos API',\n  events: {\n    'Create Success': props<{ todo: Todo }>(),\n    'Change Status Success': props<{ todo: Todo }>(),\n    'Delete Success': props<{ todoId: number }>(),\n    'Load Success': props<{ todos: Todo[] }>(),\n    'Load Faile': props<{ error: string }>(),\n  },\n})"
+            },
+            {
+                "name": "todosReducer",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/features/todos/store/todos.reducer.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "createReducer(\n  initialTodosState,\n  on(todosApiActions.loadSuccess, (_, { todos }) => {\n    return { todos, error: null };\n  }),\n  on(todosApiActions.loadFaile, (_, { error }) => {\n    return { todos: [], error };\n  }),\n  on(todosApiActions.createSuccess, (state, { todo }) => {\n    return { ...state, todos: [...state.todos, todo] };\n  }),\n  on(todosApiActions.changeStatusSuccess, (state, { todo }) => {\n    return {\n      ...state,\n      todos: state.todos.map((oldTodo) => {\n        if (oldTodo.id !== todo.id) {\n          return oldTodo;\n        }\n\n        return todo;\n      }),\n    };\n  }),\n  on(todosApiActions.deleteSuccess, (state, { todoId }) => {\n    return {\n      ...state,\n      todos: state.todos.filter((todo) => todo.id !== todoId),\n    };\n  }),\n)"
+            }
+        ],
+        "functions": [],
+        "typealiases": [],
+        "enumerations": [],
+        "groupedVariables": {
+            "src/app/app.config.ts": [
+                {
+                    "name": "appConfig",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/app.config.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "ApplicationConfig",
+                    "defaultValue": "{\n  providers: [\n    provideZoneChangeDetection({ eventCoalescing: true }),\n    provideRouter(routes),\n    provideAnimationsAsync(),\n    provideStore({ todosState: todosReducer }),\n    provideEffects(TodosEffects),\n    provideHttpClient(),\n    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),\n  ],\n}"
+                }
+            ],
+            "src/app/features/todos/store/todos.reducer.ts": [
+                {
+                    "name": "initialTodosState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "TodosState",
+                    "defaultValue": "{\n  todos: [],\n  error: null,\n}"
+                },
+                {
+                    "name": "todosReducer",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.reducer.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createReducer(\n  initialTodosState,\n  on(todosApiActions.loadSuccess, (_, { todos }) => {\n    return { todos, error: null };\n  }),\n  on(todosApiActions.loadFaile, (_, { error }) => {\n    return { todos: [], error };\n  }),\n  on(todosApiActions.createSuccess, (state, { todo }) => {\n    return { ...state, todos: [...state.todos, todo] };\n  }),\n  on(todosApiActions.changeStatusSuccess, (state, { todo }) => {\n    return {\n      ...state,\n      todos: state.todos.map((oldTodo) => {\n        if (oldTodo.id !== todo.id) {\n          return oldTodo;\n        }\n\n        return todo;\n      }),\n    };\n  }),\n  on(todosApiActions.deleteSuccess, (state, { todoId }) => {\n    return {\n      ...state,\n      todos: state.todos.filter((todo) => todo.id !== todoId),\n    };\n  }),\n)"
+                }
+            ],
+            "src/app/features/todos/store/todos.selectors.ts": [
+                {
+                    "name": "selectAllTodos",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(\n  selectTodosState,\n  (state) => state.todos,\n)"
+                },
+                {
+                    "name": "selectTodosState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createFeatureSelector<Readonly<TodosState>>('todosState')"
+                },
+                {
+                    "name": "selectTodosStateError",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.selectors.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createSelector(\n  selectTodosState,\n  (state) => state.error,\n)"
+                }
+            ],
+            "src/app/features/todos/store/todos.actions.ts": [
+                {
+                    "name": "todosActions",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createActionGroup({\n  source: 'Todos',\n  events: {\n    Load: emptyProps(),\n    Create: props<CreateTodoPayload>(),\n    ChangeStatus: props<ChangeTodoStatusPayload>(),\n    Delete: props<{ todoId: number }>(),\n  },\n})"
+                },
+                {
+                    "name": "todosApiActions",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/features/todos/store/todos.actions.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "createActionGroup({\n  source: 'Todos API',\n  events: {\n    'Create Success': props<{ todo: Todo }>(),\n    'Change Status Success': props<{ todo: Todo }>(),\n    'Delete Success': props<{ todoId: number }>(),\n    'Load Success': props<{ todos: Todo[] }>(),\n    'Load Faile': props<{ error: string }>(),\n  },\n})"
+                }
+            ]
+        },
+        "groupedFunctions": {},
+        "groupedEnumerations": {},
+        "groupedTypeAliases": {}
+    },
+    "routes": [],
+    "coverage": {
+        "count": 0,
+        "status": "low",
+        "files": [
+            {
+                "filePath": "src/app/app.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "AppComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/app.config.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "appConfig",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "todosActions",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.actions.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "todosApiActions",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.effects.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "TodosEffects",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.reducer.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "TodosState",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "initialTodosState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.reducer.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "todosReducer",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectAllTodos",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectTodosState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/store/todos.selectors.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "selectTodosStateError",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/todos.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TodosComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/features/todos/todos.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "TodosService",
+                "coveragePercent": 0,
+                "coverageCount": "0/8",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TodosListComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/5",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ChangeStatusPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/components/todos/todos-list/todos-list.component.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "TodosListItem",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/components/todos/todos-search/todos-search.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "TodosSearchComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/10",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/services/api.service.ts",
+                "type": "injectable",
+                "linktype": "injectable",
+                "name": "ApiService",
+                "coveragePercent": 0,
+                "coverageCount": "0/7",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/services/api.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "ChangeTodoStatusPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/3",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/services/api.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "CreateTodoPayload",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/shared/services/api.service.ts",
+                "type": "interface",
+                "linktype": "interface",
+                "name": "Todo",
+                "coveragePercent": 0,
+                "coverageCount": "0/4",
+                "status": "low"
+            }
+        ]
+    }
+}

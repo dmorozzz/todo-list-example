@@ -1,0 +1,14 @@
+<mat-selection-list #shoes>
+  @for (todo of todos; track todo.id) {
+  <div class="todo-item">
+    <mat-list-option [selected]="todo.completed" (selectedChange)="changeStatus({ id: todo.id, completed: $event })">
+      <div matListItemTitle>
+        {{ todo.title }}
+      </div>
+    </mat-list-option>
+    <button class="delete-btn" mat-button (click)="deleted.next(todo.id)">
+      Delete
+    </button>
+  </div>
+  }
+</mat-selection-list>

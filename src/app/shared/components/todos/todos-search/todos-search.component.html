@@ -1,0 +1,10 @@
+<form [formGroup]="todosSearchForm">
+  <mat-form-field appearance="outline">
+    <mat-label>Search or create todo</mat-label>
+    <input matInput placeholder="Write todo title" formControlName="title" (keyup.Enter)="create()" />
+    <button class="create-btn" mat-stroked-button matSuffix (click)="create()">
+      Create
+      <span>↵ Enter</span>
+    </button>
+  </mat-form-field>
+</form>

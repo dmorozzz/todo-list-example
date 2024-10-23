@@ -1,0 +1,10 @@
+<section class="todos">
+  <app-todos-search (changed)="search$.next($event)" (created)="createTodo({ title: $event })"></app-todos-search>
+  @if (todosSearch$ | async; as todos) {
+  @if (search$ | async) {
+  <span>Search result: {{ todos.length === 0 ? "nothing" : "" }}</span>
+  }
+  <app-todos-list [todos]="todos" (statusChange)="changeTodoStatus($event)"
+    (deleted)="deleteTodo($event)"></app-todos-list>
+  }
+</section>
